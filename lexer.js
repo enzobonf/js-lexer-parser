@@ -14,14 +14,15 @@ class Lexer {
 
             let newString = "";
             item.split("").forEach((char) => {
-
                 if((/([(]|[)]|[{]|[}]|[;]|[,]|[+]|[-]|[*]|[/]|[>]|[<]|[=]|[|]|[&])/).test(char)){
                     newString += ` ${char}`;
+                }
+                else if(char === `"`){
+                    newString += ` ${char} `;
                 }
                 else{
                     newString += char;
                 }
-
             });
 
             return newString.split(' ').map((token) => ({
