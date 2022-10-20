@@ -1,3 +1,5 @@
+const { tokensClasses } = require("./tokensClasses");
+
 class Lexer {
 
     str = '';
@@ -15,15 +17,17 @@ class Lexer {
             let newString = "";
             item.split("").forEach((char) => {
                 if((/([(]|[)]|[{]|[}]|[;]|[,]|[+]|[-]|[*]|[/]|[>]|[<]|[=]|[|]|[&])/).test(char)){
-                    newString += ` ${char}`;
-                }
-                else if(char === `"`){
                     newString += ` ${char} `;
                 }
+                /* else if(char === `"`){
+                    newString += ` ${char} `;
+                } */
                 else{
                     newString += char;
                 }
             });
+
+            console.log(newString);
 
             return newString.split(' ').map((token) => ({
                 token,
@@ -32,7 +36,35 @@ class Lexer {
             
         }).flatMap((x) => x).filter((x)=>x.token.length);
 
-        return tokens;
+        const tokensWithClass = tokens.map((token) => {
+            const tokenClass = Lexer.getTokenClass(token);
+            return {
+                ...token,
+                tokenClass
+            }
+        })
+
+        this.tokens = tokensWithClass;
+        this.showErrorMessages();
+        return tokensWithClass;
+    }
+
+    
+    showErrorMessages(){ 
+        let errorMessages = [];
+        for(let token of this.tokens){
+            if(!token.tokenClass){
+                errorMessages.push({
+                    message: `Erro léxico na linha ${token.line}, token ${token.token} não identificado`
+                });
+            }
+        }
+        console.log(errorMessages);
+    }
+
+    static getTokenClass(tokenObj){
+        const tokenClass = tokensClasses.find((x) => x.rgx.test(tokenObj.token));
+        return tokenClass?.class ?? undefined;
     }
 }
 

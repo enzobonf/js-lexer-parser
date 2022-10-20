@@ -1,5 +1,5 @@
 const Lexer = require("./lexer");
-
+const { tokensClasses } = require("./tokensClasses");
 
 function main(){
     const code = `
@@ -7,7 +7,13 @@ function main(){
 
             int a, b;
             b = 5;
-            a = b + 2;
+            
+            if(b = 5){
+                a = 2;
+            }
+            else{
+                a = 3;
+            }
 
             return 0;
 
@@ -16,8 +22,10 @@ function main(){
 
     const lex = Lexer(code);
     const tokens = lex.tokenizer();
-    
+
     console.log(tokens);
+    lex.showErrorMessages();
+    
 }
 
 main();
