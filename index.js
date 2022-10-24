@@ -8,7 +8,7 @@ function main(){
             int a, b;
             b = 5;
             
-            if(b = 5){
+            if(b == 5){
                 a = 2;
             }
             else{

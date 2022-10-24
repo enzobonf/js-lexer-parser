@@ -15,13 +15,12 @@ class Lexer {
         .map((item, index)=>{
 
             let newString = "";
-            item.split("").forEach((char) => {
+
+            const items = item.split("");
+            items.forEach((char) => {
                 if((/([(]|[)]|[{]|[}]|[;]|[,]|[+]|[-]|[*]|[/]|[>]|[<]|[=]|[|]|[&])/).test(char)){
                     newString += ` ${char} `;
                 }
-                /* else if(char === `"`){
-                    newString += ` ${char} `;
-                } */
                 else{
                     newString += char;
                 }
@@ -34,13 +33,13 @@ class Lexer {
                 line: index + 1
             }));
             
-        }).flatMap((x) => x).filter((x)=>x.token.length);
+        }).flatMap((x) => x).filter((x) => x.token);
 
         const tokensWithClass = tokens.map((token) => {
             const tokenClass = Lexer.getTokenClass(token);
             return {
                 ...token,
-                tokenClass
+                class: tokenClass
             }
         })
 
@@ -53,9 +52,9 @@ class Lexer {
     showErrorMessages(){ 
         let errorMessages = [];
         for(let token of this.tokens){
-            if(!token.tokenClass){
+            if(!token.class){
                 errorMessages.push({
-                    message: `Erro léxico na linha ${token.line}, token ${token.token} não identificado`
+                    message: `Erro léxico na linha ${token.line}, token "${token.token}" não identificado`
                 });
             }
         }
