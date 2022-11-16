@@ -1,9 +1,11 @@
+const { HashTable } = require("./hash");
 const { tokensClasses } = require("./tokensClasses");
 
 class Lexer {
 
     str = '';
     tokens = [];
+    tabelaSimbolos = new HashTable();
 
     constructor(str){
         this.str = str;
@@ -26,8 +28,6 @@ class Lexer {
                 }
             });
 
-            console.log(newString);
-
             return newString.split(' ').map((token) => ({
                 token,
                 line: index + 1
@@ -35,8 +35,16 @@ class Lexer {
             
         }).flatMap((x) => x).filter((x) => x.token);
 
+        console.log(tokens); 
+
         const tokensWithClass = tokens.map((token) => {
             const tokenClass = Lexer.getTokenClass(token);
+            console.log(tokenClass);
+            
+            if(tokenClass && tokenClass === 'IDENTIFIER'){
+                this.tabelaSimbolos.inserir(token.token, { type: tokenClass });
+            }
+
             return {
                 ...token,
                 class: tokenClass
@@ -44,7 +52,6 @@ class Lexer {
         })
 
         this.tokens = tokensWithClass;
-        this.showErrorMessages();
         return tokensWithClass;
     }
 
@@ -59,6 +66,10 @@ class Lexer {
             }
         }
         console.log(errorMessages);
+    }
+
+    mostrarSimbolos(){
+        this.tabelaSimbolos.mostrar();
     }
 
     static getTokenClass(tokenObj){
