@@ -10,7 +10,7 @@ class HashTable {
         for(let i = 0; i < key.length; i++){ // soma o valor ASCII de todos os caracteres da key
             hash += key.charCodeAt(i);
         }
-        return hash & this.table.length; // limita o hash index de 0 até 127
+        return hash % this.table.length; // limita o hash index de 0 até 127
     }
 
     inserir(key, value){
@@ -61,13 +61,17 @@ class HashTable {
     mostrar(){
         const keys = this.table.map((key, index)=>{
             return key.map((x) => ({
-                    Key: index,
+                    Hash: index,
                     Simbolo: x[0],
-                    Tipo: x[1].class
+                    Tipo: x[1].class,
             }));
         });
         
-        console.table(keys.flatMap((x)=>x));
+        console.table(keys.flatMap((x) => x));
+    }
+
+    log(){
+        console.log(this.table.flatMap((x) => x[0]));
     }
 
 }

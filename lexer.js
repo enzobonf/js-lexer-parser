@@ -5,6 +5,7 @@ class Lexer {
 
     str = '';
     tokens = [];
+    erros = [];
     tabelaSimbolos = new HashTable();
     tabelaReservadas = new HashTable();
 
@@ -21,7 +22,7 @@ class Lexer {
 
             const items = item.split("");
             items.forEach((char) => {
-                if((/([(]|[)]|[{]|[}]|[;]|[,]|[+]|[-]|[*]|[/]|[>]|[<]|[=]|[|]|[&]|[!]|[?])/).test(char)){
+                if((/([(]|[)]|[{]|[}]|[;]|[,]|[+]|[-]|[*]|[/]|[>]|[<]|[=]|[|]|[&]|[!])/).test(char)){
                     newString += ` ${char} `;
                 }
                 else{
@@ -29,7 +30,7 @@ class Lexer {
                 }
             });
 
-            console.log(newString);
+            //console.log(newString);
 
             return newString.split(' ').map((token) => ({
                 token,
@@ -38,57 +39,55 @@ class Lexer {
             
         }).flatMap((x) => x).filter((x) => x.token);
 
-        //console.log(tokens); 
-
-        /* const tokensWithClass = tokens.map((token) => {
-            const tokenClass = Lexer.getTokenClass(token);
-            console.log(tokenClass);
-            
-            if(tokenClass && tokenClass === 'IDENTIFIER'){
-                this.tabelaSimbolos.inserir(token.token, { type: tokenClass });
-            }
-
-            return {
-                ...token,
-                class: tokenClass
-            }
-        }) */
-
         tokens.forEach((token)=>{
             const tokenClass = Lexer.getTokenClass(token);
+            console.log(token, tokenClass);
 
-            if(!this.tabelaSimbolos.pesquisar(token.token)){
-                this.tabelaSimbolos.inserir(token.token, {
-                    ...token,
-                    class: tokenClass
+            if(tokenClass){
+                if(tokenClass.class === 'IDENTIFIER' && !this.tabelaSimbolos.pesquisar(token.token)){
+                    this.tabelaSimbolos.inserir(token.token, {
+                        ...token,
+                        class: tokenClass.class,
+                    });
+                }
+                else if(tokenClass.reserved && !this.tabelaReservadas.pesquisar(token.token)){
+                    this.tabelaReservadas.inserir(token.token, {
+                        ...token,
+                        class: tokenClass.class,
+                    });
+                }
+            }
+            else{
+                this.erros.push({
+                    message: `Erro léxico na linha ${token.line}, token "${token.token}" não identificado`
                 });
             }
+
         })
 
         //this.tokens = tokensWithClass;
-        return [];
+        return {
+            simbolos: this.tabelaSimbolos,
+            reservadas: this.tabelaReservadas
+        }
     }
 
     
     showErrorMessages(){ 
-        let errorMessages = [];
-        for(let token of this.tokens){
-            if(!token.class){
-                errorMessages.push({
-                    message: `Erro léxico na linha ${token.line}, token "${token.token}" não identificado`
-                });
-            }
+        for(let erro of this.erros){
+            console.log(erro.message);
         }
-        console.log(errorMessages);
     }
 
     mostrarSimbolos(){
         this.tabelaSimbolos.mostrar();
+        this.tabelaReservadas.log();
     }
+    
 
     static getTokenClass(tokenObj){
         const tokenClass = tokensClasses.find((x) => x.rgx.test(tokenObj.token));
-        return tokenClass?.class ?? undefined;
+        return tokenClass ?? undefined; // se não encontrar a classe, retorna undefined
     }
 }
 
