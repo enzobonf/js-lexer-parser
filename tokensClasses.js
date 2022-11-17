@@ -9,11 +9,11 @@ const tokensClasses = [
         rgx: /^(if)$/,
         reserved: true,
     },
-    /* {
+    {
         class: 'ELSE',
         rgx: /^(else)$/,
         reserved: true,
-    }, */
+    },
     {
         class: 'RETURN',
         rgx: /^(return)$/,
