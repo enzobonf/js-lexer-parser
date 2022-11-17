@@ -7,8 +7,8 @@ function main(){
         int main(){
 
             int a, b;
+            int 1c = 3;
             b = 5;
-            int c = 3;
             
             if(b != 5){
                 a = 2;
@@ -23,11 +23,11 @@ function main(){
     `
 
     const lex = Lexer(code);
-    const tabelas = lex.tokenizer();
+    lex.tokenizer();
 
     //console.log(tokens);
-    lex.showErrorMessages();
-    //lex.mostrarSimbolos();
+    lex.mostrarTabelas();
+    lex.mostrarErros();
     
 }
 

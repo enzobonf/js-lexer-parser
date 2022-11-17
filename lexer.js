@@ -41,7 +41,6 @@ class Lexer {
 
         tokens.forEach((token)=>{
             const tokenClass = Lexer.getTokenClass(token);
-            console.log(token, tokenClass);
 
             if(tokenClass){
                 if(tokenClass.class === 'IDENTIFIER' && !this.tabelaSimbolos.pesquisar(token.token)){
@@ -64,24 +63,20 @@ class Lexer {
             }
 
         })
-
-        //this.tokens = tokensWithClass;
-        return {
-            simbolos: this.tabelaSimbolos,
-            reservadas: this.tabelaReservadas
-        }
     }
 
     
-    showErrorMessages(){ 
+    mostrarErros(){ 
         for(let erro of this.erros){
             console.log(erro.message);
         }
     }
 
-    mostrarSimbolos(){
+    mostrarTabelas(){
+        console.log('Tabela de símbolos: ')
         this.tabelaSimbolos.mostrar();
-        this.tabelaReservadas.log();
+        console.log('Tabela de palavras reservadas: ')
+        this.tabelaReservadas.mostrar();
     }
     
 
