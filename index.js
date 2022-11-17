@@ -6,10 +6,10 @@ function main(){
     const code = `
         int main(){
 
-            int 1a, b;
-            % = 5;
+            int a, b;
+            b = 5;
             
-            if(b == 5){
+            if(b != 5){
                 a = 2;
             }
             else{

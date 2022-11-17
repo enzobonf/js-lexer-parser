@@ -24,7 +24,7 @@ const tokensClasses = [
         rgx: /^(;)$/,
     },
     {
-        class: 'COMA',
+        class: 'CONMA',
         rgx: /^(,)$/,
     },
     {

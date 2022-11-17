@@ -15,7 +15,6 @@ class HashTable {
 
     inserir(key, value){
         const index = this._hash(key); // gera o hash
-        console.log({index})
         if(this.table[index]){ // caso já exista uma key igual
             for(let i = 0; i < this.table[index].length; i++){ // percorre o encadeamento da chave
                 if(this.table[index][i][0] === key){
@@ -64,7 +63,7 @@ class HashTable {
             return key.map((x) => ({
                     Key: index,
                     Simbolo: x[0],
-                    Tipo: x[1].type
+                    Tipo: x[1].class
             }));
         });
         

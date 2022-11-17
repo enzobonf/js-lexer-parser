@@ -6,6 +6,7 @@ class Lexer {
     str = '';
     tokens = [];
     tabelaSimbolos = new HashTable();
+    tabelaReservadas = new HashTable();
 
     constructor(str){
         this.str = str;
@@ -20,13 +21,15 @@ class Lexer {
 
             const items = item.split("");
             items.forEach((char) => {
-                if((/([(]|[)]|[{]|[}]|[;]|[,]|[+]|[-]|[*]|[/]|[>]|[<]|[=]|[|]|[&])/).test(char)){
+                if((/([(]|[)]|[{]|[}]|[;]|[,]|[+]|[-]|[*]|[/]|[>]|[<]|[=]|[|]|[&]|[!]|[?])/).test(char)){
                     newString += ` ${char} `;
                 }
                 else{
                     newString += char;
                 }
             });
+
+            console.log(newString);
 
             return newString.split(' ').map((token) => ({
                 token,
@@ -35,9 +38,9 @@ class Lexer {
             
         }).flatMap((x) => x).filter((x) => x.token);
 
-        console.log(tokens); 
+        //console.log(tokens); 
 
-        const tokensWithClass = tokens.map((token) => {
+        /* const tokensWithClass = tokens.map((token) => {
             const tokenClass = Lexer.getTokenClass(token);
             console.log(tokenClass);
             
@@ -49,10 +52,21 @@ class Lexer {
                 ...token,
                 class: tokenClass
             }
+        }) */
+
+        tokens.forEach((token)=>{
+            const tokenClass = Lexer.getTokenClass(token);
+
+            if(!this.tabelaSimbolos.pesquisar(token.token)){
+                this.tabelaSimbolos.inserir(token.token, {
+                    ...token,
+                    class: tokenClass
+                });
+            }
         })
 
-        this.tokens = tokensWithClass;
-        return tokensWithClass;
+        //this.tokens = tokensWithClass;
+        return [];
     }
 
     
