@@ -1,6 +1,4 @@
-const { HashTable } = require("./hash");
 const Lexer = require("./lexer");
-const { tokensClasses } = require("./tokensClasses");
 const readline = require('readline');
 const { readFile } = require("./file");
 
