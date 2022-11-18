@@ -15,7 +15,7 @@ class Lexer {
 
     tokenizer(){
         let tokens = this.str
-        .split('\n')
+        .split('\n') // separa a string por linhas, o split é equivalente ao strtok do C
         .map((item, index)=>{
 
             let newString = "";
@@ -30,45 +30,49 @@ class Lexer {
                 }
             });
 
-            //console.log(newString);
-
             return newString.split(' ').map((token) => ({
                 token,
                 line: index + 1
             }));
             
-        }).flatMap((x) => x).filter((x) => x.token);
+        }).flatMap((x) => x).filter((x) => x.token && x.token !== '\r');
 
         tokens.forEach((token)=>{
             const tokenClass = Lexer.getTokenClass(token);
 
             if(tokenClass){
-                if(tokenClass.class === 'IDENTIFIER' && !this.tabelaSimbolos.pesquisar(token.token)){
-                    this.tabelaSimbolos.inserir(token.token, {
-                        ...token,
-                        class: tokenClass.class,
-                    });
+                
+                const tokenObj = {
+                    ...token,
+                    class: tokenClass.class,
                 }
+
+                if(tokenClass.class === 'IDENTIFIER' && !this.tabelaSimbolos.pesquisar(token.token)){
+                    this.tabelaSimbolos.inserir(token.token, tokenObj);
+                }
+                // se for palavra reservada e ainda não estiver na tabela, insere-o
                 else if(tokenClass.reserved && !this.tabelaReservadas.pesquisar(token.token)){
-                    this.tabelaReservadas.inserir(token.token, {
-                        ...token,
-                        class: tokenClass.class,
-                    });
+                    this.tabelaReservadas.inserir(token.token, tokenObj);
                 }
             }
             else{
                 this.erros.push({
                     message: `Erro léxico na linha ${token.line}, token "${token.token}" não identificado`
-                });
+                }); // se a classe do token não for encontrada, gera um erro
             }
-
+            
         })
     }
 
     
     mostrarErros(){ 
-        for(let erro of this.erros){
-            console.log(erro.message);
+        if(this.erros.length > 0){
+            for(let erro of this.erros){
+                console.log(erro.message);
+            }
+        }
+        else{
+            console.log('Não foram encontrados erros');
         }
     }
 

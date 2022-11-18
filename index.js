@@ -1,33 +1,26 @@
 const { HashTable } = require("./hash");
 const Lexer = require("./lexer");
 const { tokensClasses } = require("./tokensClasses");
+const readline = require('readline');
+const { readFile } = require("./file");
 
 function main(){
-    const code = `
-        int main(){
 
-            int a, b;
-            int 1c = 3;
-            b = 5;
-            
-            if(b != 5){
-                a = 2;
-            }
-            else{
-                a = 3;
-            }
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
 
-            return 0;
+    rl.question('Digite o caminho do programa a ser lido, com extensão: \n', (filename) => {
 
-        }
-    `
+        const code = readFile(filename); // retorna o texto obtido do arquivo
+        const lex = Lexer(code); // Inicializa o lexer, passando o código lido para a classe
+        
+        lex.tokenizer(); // executa o método que analisa lexicamente o código
+        lex.mostrarTabelas(); // mostra as tabelas de reservadas e de símbolos
+        lex.mostrarErros(); // mostra os erros, se  houverem
 
-    const lex = Lexer(code);
-    lex.tokenizer();
-
-    //console.log(tokens);
-    lex.mostrarTabelas();
-    lex.mostrarErros();
+    });
     
 }
 

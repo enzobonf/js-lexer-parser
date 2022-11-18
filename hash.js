@@ -22,7 +22,7 @@ class HashTable {
                     return;
                 }
             }
-
+            
             this.table[index].push([key, value]);
         }
         else{

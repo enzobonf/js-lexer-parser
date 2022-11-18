@@ -1,7 +1,7 @@
 const tokensClasses = [
     {
         class: 'TYPE',
-        rgx: /^(float$)|(int$)|(char$)|(void$)/,
+        rgx: /^(float)$|(int)$|(char)$|(void)$/,
         reserved: true,
     },
     {
@@ -17,6 +17,11 @@ const tokensClasses = [
     {
         class: 'RETURN',
         rgx: /^(return)$/,
+        reserved: true,
+    },
+    {
+        class: 'ADD_SIGN',
+        rgx: /^(\+)$/,
         reserved: true,
     },
     {
