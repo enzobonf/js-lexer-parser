@@ -71,7 +71,7 @@ class HashTable {
     }
 
     log(){
-        console.log(this.table.flatMap((x) => x[0]))
+        console.log(this.table.flatMap((x) => x[0]));
     }
 
 }
