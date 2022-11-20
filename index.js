@@ -18,6 +18,8 @@ function main(){
         lex.mostrarTabelas(); // mostra as tabelas de reservadas e de símbolos
         lex.mostrarErros(); // mostra os erros, se  houverem
 
+        process.exit(0);
+
     });
     
 }
