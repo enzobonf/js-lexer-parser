@@ -19,7 +19,6 @@ function main(){
         lex.mostrarErros(); // mostra os erros, se  houverem
 
         process.exit(0);
-
     });
     
 }
