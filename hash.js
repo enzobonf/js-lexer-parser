@@ -1,5 +1,8 @@
 class HashTable {
     
+    table = [];
+    size = 0;
+
     constructor(){
         this.table = new Array(127);
         this.size = 0;

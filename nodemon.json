@@ -1,0 +1,4 @@
+{
+    "watch": ["**/*.js", "fonte3.txt"],
+    "ext": "js"
+}
