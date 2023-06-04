@@ -73,6 +73,21 @@ class HashTable {
         console.table(keys.flatMap((x) => x));
     }
 
+    mostrarSimbolos(){
+        const keys = this.table.map((key, index)=>{
+            return key.map((x) => ({
+                    Hash: index,
+                    Simbolo: x[0],
+                    Linha: x[1].line,
+                    Classe: x[1].class,
+                    Tipo: x[1].type,
+                    Valor: x[1].value
+            }));
+        });
+        
+        console.table(keys.flatMap((x) => x));
+    }
+
     log(){
         console.log(this.table.flatMap((x) => x[0]));
     }

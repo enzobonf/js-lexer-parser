@@ -18,7 +18,7 @@ const tokensNames = {
     OB: "OPEN_BRACKET",
     CB: "CLOSE_BRACKET",
     DECIMAL: "DECIMAL",
-    INT: "INTEGER",
+    NUMBER: "NUMBER",
     EMPTY: "λ"
 }
 
@@ -119,7 +119,7 @@ const tokensClasses = [
         reserved: false,
     },
     {
-        class: tokensNames.INT,
+        class: tokensNames.NUMBER,
         rgx: /^[0-9]+$/,
         reserved: false
     }

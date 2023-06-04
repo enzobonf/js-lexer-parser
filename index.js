@@ -26,17 +26,15 @@ function main(){
     const lex = Lexer(code); // Inicializa o lexer, passando o código lido para a classe
     
     lex.tokenizer(); // executa o método que analisa lexicamente o código
-    lex.mostrarTabelas(); // mostra as tabelas de reservadas e de símbolos
+    //lex.mostrarTabelas(); // mostra as tabelas de reservadas e de símbolos
     lex.mostrarErros(); // mostra os erros, se  houverem
-    //console.log(lex.tokens);
+    console.log(lex.tokens);
 
     if(lex.erros.length === 0){
         const parser = new Parser(lex.tokens, lex.tabelaSimbolos, lex.tabelaReservadas);
         parser.analyze();
-        //parser.showErrors();
-    }
-    else{
-        lex.mostrarErros();
+        parser.showErrors();
+       // parser.tabelaSimbolos.mostrarSimbolos();
     }
 
     
