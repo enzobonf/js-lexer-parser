@@ -225,7 +225,7 @@ class Parser {
 
     identifier(){
         if(this.currentToken.class === tokensNames.ID){
-            this.tree.push(`<IDENTIFIER> ::= ${this.currentToken.class}`);
+            this.tree.push(`<IDENTIFIER> ::= ${this.currentToken.token}`);
             return this.tokens.shift();
         }
         else{
