@@ -96,7 +96,7 @@ class Parser {
 
     function_(){
         if(this.currentToken.class === tokensNames.OP){
-            this.tree.push("<FUNCTION_> ::= ( <F0> ) <STATEMENT>");
+            this.tree.push("<FUNCTION_> ::= ( <F0> ) <compound_statement>");
             this.tokens.shift();
         }
         else {
@@ -112,7 +112,7 @@ class Parser {
             this.addError(this.currentToken, 'Esperava uma declaração do tipo [")"]');
         }
 
-        // 
+        this.compound_statement();
         
     }
 
@@ -164,6 +164,29 @@ class Parser {
         else{
             this.tree.push("<F2> ::= λ")
         }
+    }
+
+    compound_statement(){
+        this.tree.push("<COMPOUND_STATEMENT> ::= { <STATEMENT> }");
+        if(this.currentToken.class === tokensNames.OB){
+            this.tokens.shift();
+        }
+        else{
+            this.addError(this.currentToken, 'Esperava uma declaração do tipo ["{"]');
+        }
+
+        this.statement();
+        
+        if(this.currentToken.class === tokensNames.CB){
+            this.tokens.shift();
+        }
+        else{
+            this.addError(this.currentToken, 'Esperava uma declaração do tipo ["}"]');
+        }
+    }
+
+    statement(){
+        
     }
 
     // decl -> type id varlist
@@ -234,7 +257,7 @@ class Parser {
     }
 
     value(){
-        if(firsts.VALUE.some((className)=> className === this.currentToken.class)){
+        if(this.firstContainsToken("VALUE")){
             this.tree.push(`<VALUE> ::= ${this.currentToken.class}`);
             return this.tokens.shift();
         }

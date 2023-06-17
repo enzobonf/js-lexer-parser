@@ -28,6 +28,7 @@ const tokensNames = {
     DECIMAL: "DECIMAL",
     NUMBER: "NUMBER",
     STRING: "STRING",
+    CHARACTER: "CHARACTER",
     EMPTY: "λ"
 }
 
@@ -172,6 +173,11 @@ const tokensClasses = [
         rgx: /^["].*["]$/,
         reserved: false,
       },
+    {
+        class: tokensNames.CHARACTER,
+        rgx: /^['].[']$/,
+        reserved: false,
+      },
 ]
 
 const firsts = {
@@ -219,6 +225,31 @@ const firsts = {
         tokensNames.VOID,
       ],
     FUNCTION_: [tokensNames.OP],
+    EXPRESSION: [
+        tokensNames.ID,
+        tokensNames.NUMBER,
+        tokensNames.DECIMAL,
+        tokensNames.STRING,
+        tokensNames.CHARACTER,
+      ],
+    EXPRESSION_: [tokensNames.COMMA, tokensNames.EMPTY],
+    STATEMENT: [tokensNames.OBR],
+    STATEMENT_: [
+        tokensNames.IF,
+        /* tokensNames.WHILE,
+        tokensNames.FOR, */
+        tokensNames.ID,
+        tokensNames.NUMBER,
+        tokensNames.DECIMAL,
+        tokensNames.STRING,
+        tokensNames.CHARACTER,
+        tokensNames.INT,
+        tokensNames.FLOAT,
+        tokensNames.CHAR,
+        tokensNames.VOID,
+        tokensNames.EMPTY,
+        tokensNames.RETURN,
+    ],
 }
 
 module.exports = { tokensNames, tokensClasses, firsts };
