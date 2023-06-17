@@ -37,8 +37,6 @@ class Lexer {
             
         }).flatMap((x) => x).filter((x) => x.token && x.token !== '\r');
 
-        console.log(tokens);
-
         tokens.forEach((token)=>{
             const tokenClass = Lexer.getTokenClass(token);
 

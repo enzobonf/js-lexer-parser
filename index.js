@@ -28,7 +28,6 @@ function main(){
     lex.tokenizer(); // executa o método que analisa lexicamente o código
     //lex.mostrarTabelas(); // mostra as tabelas de reservadas e de símbolos
     lex.mostrarErros(); // mostra os erros, se  houverem
-    console.log(lex.tokens);
 
     if(lex.erros.length === 0){
         const parser = new Parser(lex.tokens, lex.tabelaSimbolos, lex.tabelaReservadas);

@@ -8,7 +8,13 @@ const tokensNames = {
     ELSE: "ELSE",
     RETURN: "RETURN",
     ADD: "ADD_SIGN",
+    SUBTRACT: "SUBTRACT_SIGN",
+    MULTIPLY: "MULTIPLY_SIGN",
+    DIV: "DIV_SIGN",
     EQUAL: "EQUAL_SIGN",
+    AND: "AND_SIGN",
+    MINOR: "MINOR_SIGN",
+    GREATER: "GREATER_SIGN",
     EXCLAMATION: "EXCLAMATION",
     SEMI: "SEMI",
     COMMA: "COMMA",
@@ -19,6 +25,7 @@ const tokensNames = {
     CB: "CLOSE_BRACKET",
     DECIMAL: "DECIMAL",
     NUMBER: "NUMBER",
+    STRING: "STRING",
     EMPTY: "λ"
 }
 
@@ -66,6 +73,36 @@ const tokensClasses = [
     {
         class: tokensNames.ADD,
         rgx: /^(\+)$/,
+        reserved: true,
+    },
+    {
+        class: tokensNames.SUBTRACT,
+        rgx: /^(\-)$/,
+        reserved: true,
+    },
+    {
+        class: tokensNames.MULTIPLY,
+        rgx: /^[*]$/,
+        reserved: true,
+    },
+    {
+        class: tokensNames.DIV,
+        rgx: /^(\/)$/,
+        reserved: true,
+    },
+    {
+        class: tokensNames.AND,
+        rgx: /^(\&)$/,
+        reserved: true,
+    },
+    {
+        class: tokensNames.MINOR,
+        rgx: /^(\<)$/,
+        reserved: true,
+    },
+    {
+        class: tokensNames.GREATER,
+        rgx: /^(\>)$/,
         reserved: true,
     },
     {
@@ -121,8 +158,13 @@ const tokensClasses = [
     {
         class: tokensNames.NUMBER,
         rgx: /^[0-9]+$/,
-        reserved: false
-    }
+        reserved: false,
+    },
+    {
+        class: tokensNames.STRING,
+        rgx: /^["].*["]$/,
+        reserved: false,
+      },
 ]
 
 const firsts = {
@@ -147,6 +189,21 @@ const firsts = {
         tokensNames.CHAR,
         tokensNames.VOID,
     ],
+    VALUE: [
+        tokensNames.NUMBER,
+        tokensNames.DECIMAL,
+        tokensNames.STRING
+    ],
+    OPERATOR: [
+        tokensNames.ADD,
+        tokensNames.SUBTRACT,
+        tokensNames.MULTIPLY,
+        tokensNames.DIV,
+        tokensNames.EQUAL,
+        tokensNames.AND,
+        tokensNames.MINOR,
+        tokensNames.GREATER,
+      ],
 }
 
 module.exports = { tokensNames, tokensClasses, firsts };

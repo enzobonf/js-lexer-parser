@@ -10,6 +10,7 @@ const eofToken = {
 class Parser {
 
     tokens = [];
+    tree = [];
     errors = [];
     currentTokenIndex = 0;
     //currentToken = null;
@@ -25,7 +26,9 @@ class Parser {
     }
 
     analyze(){
+        //this.decl();
         this.decl();
+        console.log(this.tree);
     }
     
     addError(tokenReceived, message){
@@ -41,7 +44,7 @@ class Parser {
 
     firstContainsToken(leftIndicator){
         if(!this.currentToken) {
-            this.currentToken = eofToken;
+            //this.currentToken = eofToken;
             return false;
         }
         
@@ -49,15 +52,17 @@ class Parser {
     }
 
     get currentToken(){
-        return this.tokens.at(0);
+        return this.tokens.at(0) ?? eofToken;
     }
     
-    // decl -> type id decl_
+    // decl -> type id varlist
     decl(){
+
+        this.tree.push('<DECL> ::= <TYPE> <VARLIST>')
+
         const s = this.type();
         this.varList(s);
-
-        console.log(this.tokens);
+        
         /* if(this.currentToken.class === tokensNames.SEMI){
             this.tokens.shift();
         } */
@@ -65,7 +70,8 @@ class Parser {
 
     varList(s){
 
-        console.log("Entrei na varLista() com o tipoDado: " + s);
+        //console.log("Entrei na varLista() com o tipoDado: " + s);
+        this.tree.push('<VARLIST> :: <IDENTIFIER> <VARLISTROW>')
         const id = this.identifier();
 
         if(id){
@@ -75,7 +81,7 @@ class Parser {
                 this.addError(id, "Identificador já declarado")
             }
             else{
-                this.tabelaSimbolos.inserir(id.token, id);
+                this.tabelaSimbolos.inserir(id.token, id);  
             }
 
             this.varListRow(s);
@@ -84,9 +90,11 @@ class Parser {
 
     varListRow(s){
         if(this.currentToken.class === tokensNames.SEMI){
+            this.tree.push('<VARLISTROW> :: ;')
             this.tokens.shift();
         }
         else if(this.currentToken.class === tokensNames.COMMA){
+            this.tree.push('<VARLISTROW> :: , <VARLIST>')
             this.tokens.shift();
             this.varList(s);
         }
@@ -95,28 +103,9 @@ class Parser {
         }
     }
 
-    // decl_ -> ; | , id decl_
-    /* decl_(){
-        if(this.currentToken.class === tokensNames.SEMI){
-            //this.advanceToken();
-            this.tokens.shift();
-        }
-        else if(this.currentToken.class === tokensNames.COMMA){
-            //this.advanceToken();
-            this.tokens.shift();
-
-            const id = this.identifier();
-
-
-            this.decl_();
-        }
-        else{
-            this.addError(this.currentToken, `Esperava uma declaração do tipo ["," , ";"]`);
-        }
-    } */
-
     type(){
         if (firsts.TYPE.some((className) => className === this.currentToken.class)) {
+            this.tree.push(`<TYPE> ::= ${this.currentToken.class}`);
             return this.tokens.shift().class;
         } else {
             this.addError(this.currentToken, `Esperava uma declaração do tipo [${firsts.TYPE.join(",")}]`);
@@ -125,6 +114,7 @@ class Parser {
 
     identifier(){
         if(this.currentToken.class === tokensNames.ID){
+            this.tree.push(`<IDENTIFIER> ::= ${this.currentToken.class}`);
             return this.tokens.shift();
         }
         else{
@@ -132,6 +122,55 @@ class Parser {
         }
     }
 
+    value(){
+        if(firsts.VALUE.some((className)=> className === this.currentToken.class)){
+            this.tree.push(`<VALUE> ::= ${this.currentToken.class}`);
+            return this.tokens.shift();
+        }
+        else {
+            this.addError(this.currentToken, `Esperava uma declaração do tipo [${firsts.VALUE.join(",")}]`);
+        }
+    }
+
+    primary(){
+        if(this.firstContainsToken('VALUE')){
+            this.tree.push("<PRIMARY> ::= <VALUE>");
+            return this.value();
+        }
+        else if(this.firstContainsToken('IDENTIFIER')){
+            this.tree.push("<PRIMARY> ::= <IDENTIFIFER>");
+            return this.identifier();
+        }
+        else{
+            this.addError(this.currentToken, `Esperava uma declaração do tipo [${firsts.VALUE.join(",")}id]`);
+        }
+    }
+
+    assignment(){
+        this.tree.push("<ASSIGNMENT> ::= <PRIMARY> <ASSIGNMENT_>");
+        this.primary();
+        this.assignment_();
+    }
+    
+    assignment_(){
+        if(this.firstContainsToken("OPERATOR")){
+            this.tree.push("<ASSIGNMENT_> ::= <OPERATOR> <ASSIGNMENT>");
+            this.operator();
+            this.assignment();
+        }
+        else{
+            this.tree.push("<ASSIGNMENT_> ::= λ")
+        }
+    }
+
+    operator(){
+        if(firsts.OPERATOR.some((className) => className === this.currentToken.class)) {
+            this.tree.push(`<OPERATOR> ::= ${this.currentToken.class}`);
+            return this.tokens.shift().class;
+        } else {
+            this.addError(this.currentToken, `Esperava uma declaração do tipo [${firsts.OPERATOR.join(",")}]`);
+        }
+    }
 }
 
 module.exports = { Parser };
