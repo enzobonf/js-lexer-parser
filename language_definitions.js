@@ -23,6 +23,8 @@ const tokensNames = {
     CP: "CLOSE_PARENTHESIS",
     OB: "OPEN_BRACKET",
     CB: "CLOSE_BRACKET",
+    OBR: "OPEN_SQBRACKET",
+    CBR: "CLOSE_SQBRACKET",
     DECIMAL: "DECIMAL",
     NUMBER: "NUMBER",
     STRING: "STRING",
@@ -30,11 +32,6 @@ const tokensNames = {
 }
 
 const tokensClasses = [
-    /* {
-        class: tokensNames.TYPE,
-        rgx: /^(float)$|(int)$|(char)$|(void)$/,
-        reserved: true,
-    }, */
     {
         class: tokensNames.FLOAT,
         rgx: /^(float)$/,
@@ -151,6 +148,16 @@ const tokensClasses = [
         reserved: true,
     },
     {
+        class: tokensNames.OBR,
+        rgx: /^([[])$/,
+        reserved: true,
+    },
+    {
+        class: tokensNames.CBR,
+        rgx: /^([\]])$/,
+        reserved: true,
+    },
+    {
         class: tokensNames.DECIMAL,
         rgx: /^[0-9]+[.][0-9]+$/,
         reserved: false,
@@ -175,6 +182,7 @@ const firsts = {
       tokensNames.VOID,
       tokensNames.EMPTY,
     ],
+    S0: [tokensNames.SEMI],
     DECLARATION: [
         tokensNames.INT,
         tokensNames.FLOAT,
@@ -203,7 +211,14 @@ const firsts = {
         tokensNames.AND,
         tokensNames.MINOR,
         tokensNames.GREATER,
+    ],
+    FUNCTION: [
+        tokensNames.INT,
+        tokensNames.FLOAT,
+        tokensNames.CHAR,
+        tokensNames.VOID,
       ],
+    FUNCTION_: [tokensNames.OP],
 }
 
 module.exports = { tokensNames, tokensClasses, firsts };

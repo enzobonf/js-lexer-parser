@@ -27,7 +27,7 @@ class Parser {
 
     analyze(){
         //this.decl();
-        this.decl();
+        this.S();
         console.log(this.tree);
     }
     
@@ -55,6 +55,117 @@ class Parser {
         return this.tokens.at(0) ?? eofToken;
     }
     
+    S(){
+        if(this.firstContainsToken("S")){
+            this.tree.push("<S> ::= <TYPE> <IDENTIFIER <S0>");
+            this.type();
+            this.identifier();
+
+            this.S0();
+            this.S();
+        }
+        else{
+            this.tree.push("<S> ::= λ");
+        }
+    }
+
+    S0(){
+        if(this.currentToken.class === tokensNames.COMMA){
+            this.tree.push("<S0> ::= ; <S0_>");
+            this.tokens.shift();
+            this.S0_();
+        }
+        else if(this.firstContainsToken("FUNCTION_")){
+            this.tree.push("<S0> ::= ; <FUNCTION_>");
+            this.function_();
+        }
+        else{
+            this.addError(this.currentToken, `Esperava uma declaração do tipo [",", "("]`);
+        }
+    }
+
+    S0_(){
+        if(this.firstContainsToken("S")){
+            this.tree.push("<S0_> ::= <S>");
+            this.S();
+        }
+        else{
+            tree.push("<S0_> ::= λ");
+        }
+    }
+
+    function_(){
+        if(this.currentToken.class === tokensNames.OP){
+            this.tree.push("<FUNCTION_> ::= ( <F0> ) <STATEMENT>");
+            this.tokens.shift();
+        }
+        else {
+            this.addError(this.currentToken, 'Esperava uma declaração do tipo ["("]');
+        }
+
+        this.F0();
+
+        if(this.currentToken.class === tokensNames.CP){
+            this.tokens.shift();
+        }
+        else {
+            this.addError(this.currentToken, 'Esperava uma declaração do tipo [")"]');
+        }
+
+        // 
+        
+    }
+
+    F0(){
+        if(this.firstContainsToken("TYPE")){
+            this.tree.push("<F0> ::= <TYPE> <IDENTIFIER> <F1>");
+            
+            this.type();
+            this.identifier();
+            this.F1();
+        }
+        else{
+            this.addError(this.currentToken, `Esperava uma declaração do tipo [${firsts.TYPE.join(",")}]`);
+            //this.tree.push("<F0> ::= λ");
+        }
+    }
+
+    F1(){
+        if(this.currentToken.class === tokensNames.COMMA){
+            this.tokens.shift();
+
+            this.tree.push("<F1> ::= , <F0>");
+            this.F0();
+        }
+        else if(this.currentToken.class === tokensNames.OBR){
+            this.tree.push("<F1> ::= [ <F2> ]");
+            this.tokens.shift();
+            this.F2();
+
+            if(this.currentToken.class === tokensNames.CBR){
+                this.tokens.shift();
+                this.F1();
+            }
+            else{
+                this.addError(this.currentToken, 'Esperava uma declaração do tipo ["]"]');
+            }
+        }
+        else {
+            this.tree.push("<F1> ::= λ");
+        }
+    }
+
+    // para declaração de vetor nos parametros da função
+    F2(){
+        if(this.currentToken.class === tokensNames.NUMBER){
+            this.tree.push("<F2> ::= number");
+            this.tokens.shift();
+        }
+        else{
+            this.tree.push("<F2> ::= λ")
+        }
+    }
+
     // decl -> type id varlist
     decl(){
 
