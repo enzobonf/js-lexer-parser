@@ -126,7 +126,6 @@ class Parser {
         }
         else{
             this.addError(this.currentToken, `Esperava uma declaração do tipo [${firsts.TYPE.join(",")}]`);
-            //this.tree.push("<F0> ::= λ");
         }
     }
 
