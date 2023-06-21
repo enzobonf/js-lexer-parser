@@ -96,7 +96,7 @@ class Parser {
 
     function_(){
         if(this.currentToken.class === tokensNames.OP){
-            this.tree.push("<FUNCTION_> ::= ( <F0> ) <compound_statement>");
+            this.tree.push("<FUNCTION_> ::= ( <F0> ) <COMPOUND_STATEMENT>");
             this.tokens.shift();
         }
         else {
@@ -125,7 +125,7 @@ class Parser {
             this.F1();
         }
         else{
-            this.addError(this.currentToken, `Esperava uma declaração do tipo [${firsts.TYPE.join(",")}]`);
+            this.tree.push("<F0> ::= λ");
         }
     }
 
@@ -185,7 +185,25 @@ class Parser {
     }
 
     statement(){
-        
+        if(this.firstContainsToken("DECLARATION")){
+            this.tree.push("<STATEMENT> ::= <DECL> <STATEMENT>")
+            this.decl();
+            this.statement();
+        }
+        else if(this.firstContainsToken("TYPE_STATEMENT")){
+            this.tree.push("<STATEMENT> ::= <TYPE_STATEMENT> <STATEMENT>")
+            this.type_statement();
+            this.statement();
+        }
+        else{
+            this.tree.push("<STATEMENT> ::= λ")
+        }
+    }
+
+    decl_statement(){}
+
+    type_statement(){
+        this.tokens.shift();
     }
 
     // decl -> type id varlist
