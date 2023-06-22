@@ -6,6 +6,8 @@ const tokensNames = {
     VOID: "VOID",
     IF: "IF",
     ELSE: "ELSE",
+    WHILE: "WHILE",
+    FOR: "FOR",
     RETURN: "RETURN",
     ADD: "ADD_SIGN",
     SUBTRACT: "SUBTRACT_SIGN",
@@ -61,6 +63,16 @@ const tokensClasses = [
     {
         class: tokensNames.ELSE,
         rgx: /^(else)$/,
+        reserved: true,
+    },
+    {
+        class: tokensNames.WHILE,
+        rgx: /^(while)$/,
+        reserved: true,
+    },
+    {
+        class: tokensNames.FOR,
+        rgx: /^(for)$/,
         reserved: true,
     },
     {
@@ -233,11 +245,11 @@ const firsts = {
         tokensNames.CHARACTER,
       ],
     EXPRESSION_: [tokensNames.COMMA, tokensNames.EMPTY],
-    STATEMENT: [tokensNames.OBR],
-    STATEMENT_: [
+    COMPOUND_STATEMENT: [tokensNames.OBR],
+    DECL_STATEMENT: [
         tokensNames.IF,
-        /* tokensNames.WHILE,
-        tokensNames.FOR, */
+        tokensNames.WHILE,
+        tokensNames.FOR,
         tokensNames.ID,
         tokensNames.NUMBER,
         tokensNames.DECIMAL,
@@ -250,6 +262,17 @@ const firsts = {
         tokensNames.EMPTY,
         tokensNames.RETURN,
     ],
+    TYPE_STATEMENT: [
+        tokensNames.IF,
+        tokensNames.WHILE,
+        tokensNames.FOR,
+        tokensNames.ID,
+        tokensNames.NUMBER,
+        tokensNames.DECIMAL,
+        tokensNames.STRING,
+        tokensNames.CHARACTER,
+        tokensNames.RETURN,
+      ],
 }
 
 module.exports = { tokensNames, tokensClasses, firsts };
