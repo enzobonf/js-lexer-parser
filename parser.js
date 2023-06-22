@@ -96,14 +96,14 @@ class Parser {
 
     function_(){
         if(this.currentToken.class === tokensNames.OP){
-            this.tree.push("<FUNCTION_> ::= ( <F0> ) <compound_statement>");
+            this.tree.push("<FUNCTION_> ::= ( <PARAM> ) <compound_statement>");
             this.tokens.shift();
         }
         else {
             this.addError(this.currentToken, 'Esperava uma declaração do tipo ["("]');
         }
 
-        this.F0();
+        this.param();
 
         if(this.currentToken.class === tokensNames.CP){
             this.tokens.shift();
@@ -116,9 +116,9 @@ class Parser {
         
     }
 
-    F0(){
+    param(){
         if(this.firstContainsToken("TYPE")){
-            this.tree.push("<F0> ::= <TYPE> <IDENTIFIER> <F1>");
+            this.tree.push("<PARAM> ::= <TYPE> <IDENTIFIER> <F1>");
             
             this.type();
             this.identifier();
@@ -126,7 +126,7 @@ class Parser {
         }
         else{
             this.addError(this.currentToken, `Esperava uma declaração do tipo [${firsts.TYPE.join(",")}]`);
-            //this.tree.push("<F0> ::= λ");
+            //this.tree.push("<PARAM> ::= λ");
         }
     }
 
@@ -134,8 +134,8 @@ class Parser {
         if(this.currentToken.class === tokensNames.COMMA){
             this.tokens.shift();
 
-            this.tree.push("<F1> ::= , <F0>");
-            this.F0();
+            this.tree.push("<F1> ::= , <PARAM>");
+            this.param();
         }
         else if(this.currentToken.class === tokensNames.OBR){
             this.tree.push("<F1> ::= [ <F2> ]");
