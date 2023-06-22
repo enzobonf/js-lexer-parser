@@ -4,6 +4,9 @@ int main(int x){
     if(a < 3){
         
     }
+    else if(a > 5) {
+
+    }
     else {
         
     }

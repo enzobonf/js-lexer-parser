@@ -258,9 +258,20 @@ class Parser {
 
     else_() {
         if(this.currentToken.class === tokensNames.ELSE){
-            this.tree.push("<ELSE> ::= else <COMPOUND_STATEMENT>");
+            //this.tree.push("<ELSE> ::= else <COMPOUND_STATEMENT>");
             this.tokens.shift();
-            this.compound_statement();
+
+            if(this.currentToken.class === tokensNames.IF){
+                this.tree.push("<ELSE> ::= else <SELECTION>");
+                this.selection();
+            }
+            else{
+                this.tree.push("<ELSE> ::= else <COMPOUND_STATEMENT>");
+                this.compound_statement();
+            }
+
+            //this.tokens.shift();
+            //this.compound_statement();
         }
         else{
             this.tree.push("<ELSE> ::= λ");
