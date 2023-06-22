@@ -272,6 +272,26 @@ const firsts = {
         tokensNames.STRING,
         tokensNames.CHARACTER,
         tokensNames.RETURN,
+    ],
+    ITERATION: [tokensNames.WHILE, tokensNames.FOR],
+    SELECTION: [tokensNames.IF],
+    ASSIGNMENT: [
+        tokensNames.ID,
+        tokensNames.NUMBER,
+        tokensNames.DECIMAL,
+        tokensNames.STRING,
+        tokensNames.CHARACTER,
+      ],
+      ASSIGNMENT_: [
+        tokensNames.EQUAL,
+        tokensNames.ADD,
+        tokensNames.SUBTRACT,
+        tokensNames.MULTIPLY,
+        tokensNames.DIV,
+        tokensNames.AND,
+        tokensNames.MINOR,
+        tokensNames.GREATER,
+        tokensNames.EMPTY,
       ],
 }
 
