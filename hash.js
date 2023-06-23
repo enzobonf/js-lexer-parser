@@ -46,6 +46,13 @@ class HashTable {
         return undefined;
     }
 
+    alterar(key, obj){
+        const line = this.pesquisar(key);
+        if(line){
+            Object.assign(line[1], obj);
+        }
+    }
+
     remover(key){
         const index = this._hash(key);
         if(this.table[index]){
@@ -66,7 +73,9 @@ class HashTable {
             return key.map((x) => ({
                     Hash: index,
                     Simbolo: x[0],
-                    Tipo: x[1].class,
+                    Classe: x[1].class,
+                    Tipo: x[1].type,
+                    Valor: x[1].value,
             }));
         });
         

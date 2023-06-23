@@ -1,5 +1,5 @@
 const { HashTable } = require("./hash");
-const { firsts, tokensNames } = require("./language_definitions");
+const { firsts, tokensNames, acceptedTypes } = require("./language_definitions");
 
 const eofToken = {
     token: 'EOF',
@@ -29,6 +29,7 @@ class Parser {
         //this.decl();
         this.S();
         console.log(this.tree);
+        this.tabelaSimbolos.mostrar();
     }
     
     addError(tokenReceived, message){
@@ -37,7 +38,10 @@ class Parser {
 
     showErrors(){
         console.table(this.errors.map((x)=>({
-            ...x.tokenReceived,
+            Token: x.tokenReceived.token,
+            Linha: x.tokenReceived.line,
+            Classe: x.tokenReceived.class,
+            Tipo: x.tokenReceived.type,
             erro: x.message
         })));
     }
@@ -49,6 +53,22 @@ class Parser {
         }
         
         return firsts[leftIndicator].some((className)=>className === this.currentToken.class);
+    }
+    
+    isAcceptedType(type, token){
+        return acceptedTypes[type]?.some((className)=> className === token.class) ?? false;
+    }
+
+    parseValue(value, type){
+        switch(type){
+            case tokensNames.INT:
+                return parseInt(value);
+            case tokensNames.FLOAT:
+                return parseFloat(value);
+            
+            default:
+                return value;
+        }
     }
 
     get currentToken(){
@@ -216,9 +236,9 @@ class Parser {
         else if(this.firstContainsToken("EXPRESSION")){
             this.tree.push("<TYPE_STATEMENT> ::= <EXPR>");
             this.expr();
-
-            if (this.currentToken.tokenClass === tokensNames.SEMI) {
-                advanceToken();
+            
+            if (this.currentToken.class === tokensNames.SEMI) {
+                this.tokens.shift();
             } 
             else {
                 this.addError(this.currentToken, `Esperava uma declaração do tipo [";"]`);
@@ -252,7 +272,6 @@ class Parser {
 
             this.compound_statement();
             this.else_();
-
         }
     }
 
@@ -318,6 +337,7 @@ class Parser {
 
         if(id){
             id.type = s;
+            id.value = undefined;
 
             if(this.tabelaSimbolos.pesquisar(id.token)){
                 this.addError(id, "Identificador já declarado")
@@ -381,7 +401,14 @@ class Parser {
         }
         else if(this.firstContainsToken('IDENTIFIER')){
             this.tree.push("<PRIMARY> ::= <IDENTIFIFER>");
-            return this.identifier();
+            const id = this.identifier();
+            const idTabela = this.tabelaSimbolos.pesquisar(id.token);
+            if(idTabela){
+                return idTabela[1];
+            }
+            else{
+                this.addError(id, `Identificador "${id.token}" não declarado`);
+            }
         }
         else{
             this.addError(this.currentToken, `Esperava uma declaração do tipo [${firsts.VALUE.join(",")}]`);
@@ -390,15 +417,54 @@ class Parser {
 
     assignment(){
         this.tree.push("<ASSIGNMENT> ::= <PRIMARY> <ASSIGNMENT_>");
-        this.primary();
-        this.assignment_();
+        const primary = this.primary();
+        const resultAssignment = this.assignment_();
+
+        console.log({primary, resultAssignment});
+
+        if(primary && resultAssignment){
+
+            if(primary.class === tokensNames.ID){
+               if(resultAssignment.operator === tokensNames.EQUAL){
+
+                    const resultPrimary = resultAssignment.assignment.primary;
+                    if(resultPrimary){
+                        if(resultPrimary.class === tokensNames.ID){
+                            if(resultPrimary.type === primary.type){
+                                this.tabelaSimbolos.alterar(primary.token, { value: resultPrimary.value});
+                            }
+                            else{
+                                this.addError(primary, `Atribuição de tipos incompatíveis: ${primary.type} e ${resultPrimary.type}`);
+                            }
+                        }
+                        else if(this.isAcceptedType(primary.type, resultPrimary)){
+                            const parsedValue = this.parseValue(resultPrimary.token, primary.type);
+                            this.tabelaSimbolos.alterar(primary.token, { value: parsedValue });
+                        }
+                        else {
+                            this.addError(primary, `Atribuição de tipos incompatíveis: ${primary.type} e ${resultAssignment.assignment.primary.class}`);
+                        }
+                    }
+                    
+               }
+               else{}
+
+            }
+            else{
+                this.addError(primary, `Esperava uma declaração do tipo [id]`);
+            }
+
+        }
+
+        return {primary, result: resultAssignment};
     }
     
     assignment_(){
         if(this.firstContainsToken("OPERATOR")){
             this.tree.push("<ASSIGNMENT_> ::= <OPERATOR> <ASSIGNMENT>");
-            this.operator();
-            this.assignment();
+            const operator = this.operator();
+            const assignment = this.assignment();
+            return {operator: operator.class, assignment};
         }
         else{
             this.tree.push("<ASSIGNMENT_> ::= λ")
@@ -408,7 +474,7 @@ class Parser {
     operator(){
         if(firsts.OPERATOR.some((className) => className === this.currentToken.class)) {
             this.tree.push(`<OPERATOR> ::= ${this.currentToken.class}`);
-            return this.tokens.shift().class;
+            return this.tokens.shift();
         } else {
             this.addError(this.currentToken, `Esperava uma declaração do tipo [${firsts.OPERATOR.join(",")}]`);
         }

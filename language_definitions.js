@@ -295,4 +295,17 @@ const firsts = {
       ],
 }
 
-module.exports = { tokensNames, tokensClasses, firsts };
+const acceptedTypes = {
+    INT: [
+        tokensNames.NUMBER,
+    ],
+    FLOAT: [
+        tokensNames.NUMBER,
+        tokensNames.DECIMAL,
+    ],
+    CHAR: [
+        tokensNames.CHARACTER
+    ]
+}
+
+module.exports = { tokensNames, tokensClasses, firsts, acceptedTypes };

@@ -1,13 +1,7 @@
 int main(int x){
-    int a, b, c;
 
-    if(a < 3){
-        
-    }
-    else if(a > 5) {
+    float a, b, c, d;
+    char x;
+    a = b = c = d = 3;
 
-    }
-    else {
-        
-    }
 }
