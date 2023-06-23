@@ -1,5 +1,5 @@
 const { HashTable } = require("./hash");
-const { tokensClasses } = require("./language_definitions");
+const { tokensClasses, tokensNames } = require("./language_definitions");
 
 class Lexer {
 
@@ -48,7 +48,7 @@ class Lexer {
 
                 this.tokens.push(tokenObj);
 
-                if(tokenClass.class === 'IDENTIFIER' && !this.tabelaSimbolos.pesquisar(token.token)){
+                if(tokenClass.class === tokensNames.ID && !this.tabelaSimbolos.pesquisar(token.token)){
                     this.tabelaSimbolos.inserir(token.token, tokenObj);
                 }
                 // se for palavra reservada e ainda não estiver na tabela, insere-o
