@@ -1,5 +1,5 @@
 const { HashTable } = require("./hash");
-const { tokensClasses } = require("./tokensClasses");
+const { tokensClasses } = require("./language_definitions");
 
 class Lexer {
 
@@ -22,7 +22,7 @@ class Lexer {
 
             const items = item.split("");
             items.forEach((char) => {
-                if((/([(]|[)]|[{]|[}]|[;]|[,]|[+]|[-]|[*]|[/]|[>]|[<]|[=]|[|]|[&]|[!])/).test(char)){
+                if((/([(]|[)]|[{]|[}]|[[]|[\]]|[;]|[,]|[+]|[-]|[*]|[/]|[>]|[<]|[=]|[|]|[&]|[!]|[/\r])/).test(char)){
                     newString += ` ${char} `;
                 }
                 else{
@@ -41,11 +41,12 @@ class Lexer {
             const tokenClass = Lexer.getTokenClass(token);
 
             if(tokenClass){
-                
                 const tokenObj = {
                     ...token,
                     class: tokenClass.class,
                 }
+
+                this.tokens.push(tokenObj);
 
                 if(tokenClass.class === 'IDENTIFIER' && !this.tabelaSimbolos.pesquisar(token.token)){
                     this.tabelaSimbolos.inserir(token.token, tokenObj);
@@ -68,11 +69,11 @@ class Lexer {
     mostrarErros(){ 
         if(this.erros.length > 0){
             for(let erro of this.erros){
-                console.log(erro.message);
+                console.log(erro);
             }
         }
         else{
-            console.log('Não foram encontrados erros');
+            console.log('Não foram encontrados erros léxicos');
         }
     }
 
