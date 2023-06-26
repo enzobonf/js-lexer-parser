@@ -22,11 +22,11 @@ function main(){
         process.exit(0);
     }); */
 
-    const code = readFile('fonte3.txt'); // retorna o texto obtido do arquivo
+    const code = readFile('fonte3.cscript'); // retorna o texto obtido do arquivo
     const lex = Lexer(code); // Inicializa o lexer, passando o código lido para a classe
     
     lex.tokenizer(); // executa o método que analisa lexicamente o código
-    //lex.mostrarTabelas(); // mostra as tabelas de reservadas e de símbolos
+    lex.mostrarTabelas(); // mostra as tabelas de reservadas e de símbolos
     lex.mostrarErros(); // mostra os erros, se  houverem
 
     if(lex.erros.length === 0){

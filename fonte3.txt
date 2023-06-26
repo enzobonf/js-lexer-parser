@@ -1,7 +1,0 @@
-int main(int x){
-
-    float a, b, c, d;
-    char x;
-    a = b = c = d = 3;
-
-}

@@ -26,7 +26,6 @@ class Parser {
     }
 
     analyze(){
-        //this.decl();
         this.S();
         console.log(this.tree);
         this.tabelaSimbolos.mostrar();
@@ -77,7 +76,9 @@ class Parser {
     
     S(){
         if(this.firstContainsToken("S")){
-            this.tree.push("<S> ::= <TYPE> <IDENTIFIER> <S0> <S>");
+            this.tree.push("<S> ::= <INCLUDE> <TYPE> <IDENTIFIER> <S0> <S>");
+            
+            this.include();
             this.type();
             this.identifier();
 
@@ -89,9 +90,48 @@ class Parser {
         }
     }
 
+    include(){
+        if(this.currentToken.class === tokensNames.INCLUDE){
+            this.tokens.shift();
+
+            if(this.currentToken.class === tokensNames.MINOR){
+                this.tree.push('<INCLUDE>  ::= "<" <LIB_NAME> "> <INCLUDE>');
+                this.tokens.shift();
+            }
+            else {
+                this.addError(this.currentToken, 'Esperava uma declaração do tipo ["<"]');
+            }
+
+            this.lib_name();
+            
+            if(this.currentToken.class === tokensNames.GREATER){
+                this.tokens.shift();
+            }
+            else {
+                this.addError(this.currentToken, 'Esperava uma declaração do tipo [">"]');
+            }
+
+            this.include();
+        }
+        else{
+            this.tree.push("<INCLUDE> ::= λ");
+        }
+    }
+
+    lib_name(){
+        if(this.currentToken.class === tokensNames.LIB){
+            this.tree.push(`<LIB_NAME> ::= ${this.currentToken.token}`);
+            this.tokens.shift();
+        }
+        else{
+            this.addError(this.currentToken, `Esperava uma declaração do tipo [LIB_NAME]`);
+        }
+    }
+
+
     S0(){
         if(this.currentToken.class === tokensNames.COMMA){
-            this.tree.push("<S0> ::= ; <S0_>");
+            this.tree.push("<S0> ::= , <S0_>");
             this.tokens.shift();
             this.S0_();
         }
@@ -444,7 +484,7 @@ class Parser {
                             //this.tabelaSimbolos.alterar(primary.token, { value: parsedValue });
                         }
                         else {
-                            this.addError(primary, `Atribuição de tipos incompatíveis: ${primary.type} e ${resultAssignment.assignment.primary.class}`);
+                            this.addError(resultPrimary, `Atribuição de tipos incompatíveis: ${primary.type} e ${resultPrimary.class}`);
                         }
                     }
                     
@@ -469,7 +509,8 @@ class Parser {
             return {operator: operator.class, assignment};
         }
         else{
-            this.tree.push("<ASSIGNMENT_> ::= λ")
+            this.tree.push("<ASSIGNMENT_> ::= λ");
+            return undefined;
         }
     }
 

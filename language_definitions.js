@@ -31,6 +31,8 @@ const tokensNames = {
     NUMBER: "NUMBER",
     STRING: "STRING",
     CHARACTER: "CHARACTER",
+    INCLUDE: "INCLUDE",
+    LIB: "LIB_NAME",
     EMPTY: "λ"
 }
 
@@ -184,16 +186,30 @@ const tokensClasses = [
         class: tokensNames.STRING,
         rgx: /^["].*["]$/,
         reserved: false,
-      },
+    },
     {
         class: tokensNames.CHARACTER,
         rgx: /^['].[']$/,
         reserved: false,
-      },
+    },
+    {
+        class: tokensNames.INCLUDE,
+        rgx: /^(#include)$/,
+        reserved: true,
+    },
+    {
+        class: tokensNames.LIB,
+        rgx: /\b\w+\.h\b/,
+        reserved: false,
+    },
 ]
 
 const firsts = {
+    INCLUDE: [
+        tokensNames.INCLUDE
+    ],
     S: [
+    tokensNames.INCLUDE,
       tokensNames.INT,
       tokensNames.FLOAT,
       tokensNames.CHAR,
