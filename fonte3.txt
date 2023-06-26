@@ -2,6 +2,16 @@ int main(int x){
 
     float a, b, c, d;
     char x;
-    a = b = c = d = 3;
+
+    if(a < 3){
+
+        if(b > 5){
+            char z;
+        }
+        else if(){
+
+        }
+
+    }
 
 }

@@ -474,7 +474,7 @@ class Parser {
     }
 
     operator(){
-        if(firsts.OPERATOR.some((className) => className === this.currentToken.class)) {
+        if(this.firstContainsToken("OPERATOR")) {
             this.tree.push(`<OPERATOR> ::= ${this.currentToken.class}`);
             return this.tokens.shift();
         } else {
