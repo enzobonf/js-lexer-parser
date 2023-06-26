@@ -110,7 +110,7 @@ class Parser {
             this.S();
         }
         else{
-            tree.push("<S0_> ::= λ");
+            this.tree.push("<S0_> ::= λ");
         }
     }
 
@@ -439,7 +439,9 @@ class Parser {
                         }
                         else if(this.isAcceptedType(primary.type, resultPrimary)){
                             const parsedValue = this.parseValue(resultPrimary.token, primary.type);
-                            this.tabelaSimbolos.alterar(primary.token, { value: parsedValue });
+                            const idTabela = this.tabelaSimbolos.pesquisar(primary.token);
+                            idTabela[1].value = parsedValue;
+                            //this.tabelaSimbolos.alterar(primary.token, { value: parsedValue });
                         }
                         else {
                             this.addError(primary, `Atribuição de tipos incompatíveis: ${primary.type} e ${resultAssignment.assignment.primary.class}`);
