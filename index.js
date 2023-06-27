@@ -35,29 +35,6 @@ function main(){
         process.exit(0);
     });
 
-    /* const filename = 'fonte3.cscript';
-    const code = readFile(filename); // retorna o texto obtido do arquivo
-    const lex = Lexer(code); // Inicializa o lexer, passando o código lido para a classe
-    
-    lex.tokenizer(); // executa o método que analisa lexicamente o código
-    lex.mostrarTabelas(); // mostra as tabelas de reservadas e de símbolos
-    lex.mostrarErros(); // mostra os erros, se  houverem
-
-    if(lex.erros.length === 0){
-        const parser = new Parser(lex.tokens, lex.tabelaSimbolos);
-        parser.analyze();
-        parser.showErrors();
-        parser.showTable();
-
-        if(!parser.errors.length){
-            const tree = parser.tree;
-            const treeFilename = filename.split('.')[0];
-            writeSyntaxTree(`./arvore_${treeFilename}.txt`, tree);
-        }
-
-    } */
-
-    
 }
 
 main();
