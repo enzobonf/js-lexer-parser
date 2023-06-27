@@ -8,7 +8,7 @@ int main(){
 
     a = 3.5;
 
-    a c = 3;
+    if()
 
     #int a;
 
@@ -16,5 +16,5 @@ int main(){
 }
 
 void #abc(){
-    
+
 }
