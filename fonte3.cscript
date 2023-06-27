@@ -1,17 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 
-int main(int x[25]){
+int main(){
 
-    int a, b;
-    a = b = 3;
+    int a, c;
+    c = 1;
+    a = 0;
 
-    while(a < 5){
+    a = a + c;
 
-    }
+    a = c * 5;
 
-    for(;;){
-        
-    }
 
 }

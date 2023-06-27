@@ -1,6 +1,6 @@
 const Lexer = require("./lexer");
 const readline = require('readline');
-const { readFile } = require("./file");
+const { readFile, writeSyntaxTree } = require("./file");
 const { Parser } = require("./parser");
 
 function main(){
@@ -22,7 +22,8 @@ function main(){
         process.exit(0);
     }); */
 
-    const code = readFile('fonte3.cscript'); // retorna o texto obtido do arquivo
+    const filename = 'fonte3.cscript';
+    const code = readFile(filename); // retorna o texto obtido do arquivo
     const lex = Lexer(code); // Inicializa o lexer, passando o código lido para a classe
     
     lex.tokenizer(); // executa o método que analisa lexicamente o código
@@ -30,10 +31,16 @@ function main(){
     lex.mostrarErros(); // mostra os erros, se  houverem
 
     if(lex.erros.length === 0){
-        const parser = new Parser(lex.tokens, lex.tabelaSimbolos, lex.tabelaReservadas);
+        const parser = new Parser(lex.tokens, lex.tabelaSimbolos);
         parser.analyze();
         parser.showErrors();
-       // parser.tabelaSimbolos.mostrarSimbolos();
+
+        if(!parser.errors.length){
+            const tree = parser.tree;
+            const treeFilename = filename.split('.')[0];
+            writeSyntaxTree(`./arvore_${treeFilename}.txt`, tree);
+        }
+
     }
 
     

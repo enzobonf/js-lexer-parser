@@ -10,4 +10,12 @@ function readFile(filename){
     }
 }
 
-module.exports = { readFile };
+function writeSyntaxTree(path, tree = []){
+    if(fs.existsSync())
+        fs.unlinkSync(path);
+    
+    fs.writeFileSync(path, tree.join('\n'));
+    console.log('Árvore sintática escrita no arquivo');
+}
+
+module.exports = { readFile, writeSyntaxTree };

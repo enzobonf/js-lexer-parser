@@ -74,8 +74,8 @@ class HashTable {
                     Hash: index,
                     Simbolo: x[0],
                     Classe: x[1].class,
-                    Tipo: x[1].type,
-                    Valor: x[1].value,
+                    /* Tipo: x[1].type,
+                    Valor: x[1].value, */
             }));
         });
         

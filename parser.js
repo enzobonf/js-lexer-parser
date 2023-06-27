@@ -12,23 +12,21 @@ class Parser {
     tokens = [];
     tree = [];
     errors = [];
-    currentTokenIndex = 0;
-    //currentToken = null;
     
     tabelaSimbolos = new HashTable();
-    tabelaReservadas = new HashTable();
 
-    constructor(tokens, tabelaSimbolos, tabelaReservadas){
+    constructor(tokens, tabelaSimbolos){
         this.tokens = tokens;
-        //this.currentToken = this.tokens[this.currentTokenIndex];
         this.tabelaSimbolos = tabelaSimbolos;
-        this.tabelaReservadas = tabelaReservadas;
     }
 
     analyze(){
         this.S();
-        console.log(this.tree);
         this.tabelaSimbolos.mostrar();
+    }
+
+    mostrarTabela(){
+        
     }
     
     addError(tokenReceived, message){
@@ -45,7 +43,7 @@ class Parser {
         })));
     }
     
-    // função que verifica se o terminal da esquerda está entre os firsts do não-terminal
+    // função que verifica se o token atual (não terminal) está entre os firsts do não-terminal
     firstContainsToken(leftIndicator){
         if(!this.currentToken) {
             return false;
@@ -83,8 +81,19 @@ class Parser {
             this.tree.push("<S> ::= <INCLUDE> <TYPE> <IDENTIFIER> <S0> <S>");
             
             this.include();
-            this.type();
-            this.identifier();
+            const type = this.type();
+            const id = this.identifier();
+
+            if(id){
+                let idTabela = this.tabelaSimbolos.pesquisar(id.token);
+                if(idTabela && idTabela.declared){
+                    this.addError(id, `Identificador ${idTabela.token} já foi`);
+                }
+                else{
+                    idTabela.declared = true;
+                    idTabela.type = type;
+                }
+            }
 
             this.S0();
             this.S();
@@ -290,6 +299,21 @@ class Parser {
         }
         else{
             this.tree.push("<TYPE_STATEMENT> ::= <RETURN>");
+            this.return();
+        }
+    }
+
+    return() {
+        if (this.currentToken.class === tokensNames.RETURN) {
+            this.tree.push("<RETURN> ::= return <ITERATION_> ;");
+            this.tokens.shift();
+            this.iteration_();
+        
+            if (this.currentToken.class === tokensNames.SEMI) {
+                this.tokens.shift();
+            } else {
+                this.addError(this.currentToken, `Esperava uma declaração do tipo [";"]`);
+            }
         }
     }
 
@@ -321,7 +345,6 @@ class Parser {
 
     else_() {
         if(this.currentToken.class === tokensNames.ELSE){
-            //this.tree.push("<ELSE> ::= else <COMPOUND_STATEMENT>");
             this.tokens.shift();
 
             if(this.currentToken.class === tokensNames.IF){
@@ -332,9 +355,6 @@ class Parser {
                 this.tree.push("<ELSE> ::= else <COMPOUND_STATEMENT>");
                 this.compound_statement();
             }
-
-            //this.tokens.shift();
-            //this.compound_statement();
         }
         else{
             this.tree.push("<ELSE> ::= λ");
@@ -426,7 +446,7 @@ class Parser {
     expr(){
         if(this.firstContainsToken("ASSIGNMENT")){
             this.tree.push("<EXPR> ::= <ASSIGNMENT> <EXPR_>");
-            this.assignment();
+            const assignment = this.assignment();
             this.expr_();
         }
         else{
@@ -463,7 +483,7 @@ class Parser {
         if(id){
             let idTabela = this.tabelaSimbolos.pesquisar(id.token);
             if(idTabela && idTabela.declared){
-                this.addError(id, "Identificador já declarado")
+                this.addError(id, `Identificador ${id.token} já foi`)
             }
             else{
                 idTabela.declared = true;
@@ -552,8 +572,8 @@ class Parser {
             
             if(primary.class === tokensNames.ID){
                 const idTabela = this.tabelaSimbolos.pesquisar(primary.token);
-                if(resultAssignment.operator === tokensNames.EQUAL){
-                    const resultPrimary = resultAssignment.assignment.primary;
+                const resultPrimary = resultAssignment.assignment.primary;
+                if(resultAssignment.operator.class === tokensNames.EQUAL){
                     if(resultPrimary){
                         if(resultPrimary.class === tokensNames.ID){
                             if(resultPrimary.type === primary.type){
@@ -572,13 +592,10 @@ class Parser {
                     }
                     
                }
-               else{}
-
             }
             else{
                 this.addError(primary, `Esperava uma declaração do tipo [id]`);
             }
-
         }
 
         return {primary, result: resultAssignment};
@@ -589,7 +606,7 @@ class Parser {
             this.tree.push("<ASSIGNMENT_> ::= <OPERATOR> <ASSIGNMENT>");
             const operator = this.operator();
             const assignment = this.assignment();
-            return {operator: operator.class, assignment};
+            return {operator, assignment};
         }
         else{
             this.tree.push("<ASSIGNMENT_> ::= λ");
