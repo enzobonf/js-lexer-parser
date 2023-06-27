@@ -205,11 +205,8 @@ const tokensClasses = [
 ]
 
 const firsts = {
-    INCLUDE: [
-        tokensNames.INCLUDE
-    ],
     S: [
-    tokensNames.INCLUDE,
+      tokensNames.INCLUDE,
       tokensNames.INT,
       tokensNames.FLOAT,
       tokensNames.CHAR,
@@ -234,7 +231,8 @@ const firsts = {
     VALUE: [
         tokensNames.NUMBER,
         tokensNames.DECIMAL,
-        tokensNames.STRING
+        tokensNames.STRING,
+        tokensNames.CHARACTER,
     ],
     OPERATOR: [
         tokensNames.ADD,

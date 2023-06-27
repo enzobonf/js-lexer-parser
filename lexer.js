@@ -44,9 +44,10 @@ class Lexer {
                 const tokenObj = {
                     ...token,
                     class: tokenClass.class,
+                    declared: false,
                 }
 
-                this.tokens.push(tokenObj);
+                this.tokens.push({...tokenObj});
 
                 if(tokenClass.class === tokensNames.ID && !this.tabelaSimbolos.pesquisar(token.token)){
                     this.tabelaSimbolos.inserir(token.token, tokenObj);
