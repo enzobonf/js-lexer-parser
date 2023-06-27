@@ -25,8 +25,18 @@ class Parser {
         this.tabelaSimbolos.mostrar();
     }
 
-    mostrarTabela(){
+    showTable(){
+        const keys = this.tabelaSimbolos.table.map((key, index)=>{
+            return key.map((x) => ({
+                    Hash: index,
+                    Simbolo: x[0],
+                    Classe: x[1].class,
+                    Tipo: x[1].type,
+                    Valor: x[1].value,
+            }));
+        });
         
+        console.table(keys.flatMap((x) => x));
     }
     
     addError(tokenReceived, message){
@@ -39,7 +49,7 @@ class Parser {
             Linha: x.tokenReceived.line,
             Classe: x.tokenReceived.class,
             Tipo: x.tokenReceived.type,
-            erro: x.message
+            Erro: x.message
         })));
     }
     

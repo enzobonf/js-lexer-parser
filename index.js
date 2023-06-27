@@ -10,7 +10,7 @@ function main(){
         output: process.stdout
     });
 
-    /* rl.question('Digite o caminho do programa a ser lido, com extensão: \n', (filename) => {
+    rl.question('Digite o caminho do programa a ser lido, com extensão: \n', (filename) => {
 
         const code = readFile(filename); // retorna o texto obtido do arquivo
         const lex = Lexer(code); // Inicializa o lexer, passando o código lido para a classe
@@ -19,10 +19,23 @@ function main(){
         lex.mostrarTabelas(); // mostra as tabelas de reservadas e de símbolos
         lex.mostrarErros(); // mostra os erros, se  houverem
 
-        process.exit(0);
-    }); */
+        if(lex.erros.length === 0){
+            const parser = new Parser(lex.tokens, lex.tabelaSimbolos);
+            parser.analyze();
+            parser.showErrors();
+            parser.showTable();
 
-    const filename = 'fonte3.cscript';
+            if(!parser.errors.length){
+                const tree = parser.tree;
+                const treeFilename = filename.split('.')[0];
+                writeSyntaxTree(`./arvore_${treeFilename}.txt`, tree);
+            }
+        }
+
+        process.exit(0);
+    });
+
+    /* const filename = 'fonte3.cscript';
     const code = readFile(filename); // retorna o texto obtido do arquivo
     const lex = Lexer(code); // Inicializa o lexer, passando o código lido para a classe
     
@@ -34,6 +47,7 @@ function main(){
         const parser = new Parser(lex.tokens, lex.tabelaSimbolos);
         parser.analyze();
         parser.showErrors();
+        parser.showTable();
 
         if(!parser.errors.length){
             const tree = parser.tree;
@@ -41,7 +55,7 @@ function main(){
             writeSyntaxTree(`./arvore_${treeFilename}.txt`, tree);
         }
 
-    }
+    } */
 
     
 }

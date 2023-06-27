@@ -3,13 +3,12 @@
 
 int main(){
 
-    int a, c;
-    c = 1;
-    a = 0;
+    int a;
+    float pi, b;
 
-    a = a + c;
-
-    a = c * 5;
+    a = 3;
+    b = 3.5;
+    pi = 3.14;
 
 
 }

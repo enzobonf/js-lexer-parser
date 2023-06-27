@@ -1,0 +1,20 @@
+<S> ::= <INCLUDE> <TYPE> <IDENTIFIER> <S0> <S>
+<INCLUDE>  ::= "<" <LIB_NAME> "> <INCLUDE>
+<LIB_NAME> ::= stdio.h
+<INCLUDE>  ::= "<" <LIB_NAME> "> <INCLUDE>
+<LIB_NAME> ::= string.h
+<INCLUDE> ::= λ
+<TYPE> ::= INT
+<IDENTIFIER> ::= main
+<S0> ::= ; <FUNCTION_>
+<FUNCTION_> ::= ( <PARAM> ) <COMPOUND_STATEMENT>
+<PARAM> ::= λ
+<COMPOUND_STATEMENT> ::= { <STATEMENT> }
+<STATEMENT> ::= <DECL> <STATEMENT>
+<DECL> ::= <TYPE> <VAR_LIST>
+<TYPE> ::= INT
+<VAR_LIST> :: <IDENTIFIER> <VAR_LIST_ROW>
+<IDENTIFIER> ::= a
+<VAR_LIST_ROW> :: ;
+<STATEMENT> ::= λ
+<S> ::= λ
