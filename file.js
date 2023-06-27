@@ -15,7 +15,6 @@ function writeSyntaxTree(path, tree = []){
         fs.unlinkSync(path);
     
     fs.writeFileSync(path, tree.join('\n'));
-    console.log('Árvore sintática escrita no arquivo');
 }
 
 module.exports = { readFile, writeSyntaxTree };

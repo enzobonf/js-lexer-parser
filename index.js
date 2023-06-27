@@ -16,20 +16,23 @@ function main(){
         const lex = Lexer(code); // Inicializa o lexer, passando o código lido para a classe
         
         lex.tokenizer(); // executa o método que analisa lexicamente o código
+        
+        const parser = new Parser(lex.tokens, lex.tabelaSimbolos);
+        parser.analyze();
+
         lex.mostrarTabelas(); // mostra as tabelas de reservadas e de símbolos
+        parser.showTable();
         lex.mostrarErros(); // mostra os erros, se  houverem
 
-        if(lex.erros.length === 0){
-            const parser = new Parser(lex.tokens, lex.tabelaSimbolos);
-            parser.analyze();
+        if(!parser.errors.length){
+            const tree = parser.tree;
+            const treeFilename = `./arvore_${filename.split('.')[0]}.txt`;
+            writeSyntaxTree(treeFilename, tree);
+            console.log('Não foram encontrados erros sintáticos');
+            console.log(`Árvore sintática escrita no arquivo ${treeFilename}`);
+        }
+        else{
             parser.showErrors();
-            parser.showTable();
-
-            if(!parser.errors.length){
-                const tree = parser.tree;
-                const treeFilename = filename.split('.')[0];
-                writeSyntaxTree(`./arvore_${treeFilename}.txt`, tree);
-            }
         }
 
         process.exit(0);

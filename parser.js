@@ -576,8 +576,6 @@ class Parser {
         const primary = this.primary();
         const resultAssignment = this.assignment_();
 
-        console.log({primary, resultAssignment});
-
         if(primary && resultAssignment){
             
             if(primary.class === tokensNames.ID){

@@ -2,5 +2,19 @@
 #include <string.h>
 
 int main(){
+
     int a;
+    float pi, b;
+
+    a = 3.5;
+
+    a c = 3;
+
+    #int a;
+
+
+}
+
+void #abc(){
+    
 }
