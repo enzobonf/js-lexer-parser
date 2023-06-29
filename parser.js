@@ -97,7 +97,7 @@ class Parser {
             if(id){
                 let idTabela = this.tabelaSimbolos.pesquisar(id.token);
                 if(idTabela && idTabela.declared){
-                    this.addError(id, `Identificador ${idTabela.token} já foi`);
+                    this.addError(id, `Identificador "${idTabela.token}" já foi declarado`);
                 }
                 else{
                     idTabela.declared = true;
@@ -414,7 +414,7 @@ class Parser {
     }
 
     for(){
-        this.tree.push("<ITERATION> ::= for ( <ITERATION_>  ; <ITERATION_>  ; <ITERATION_> ) <COMPOUND_STATEMENT>");
+        this.tree.push("<FOR> ::= for ( <ITERATION_>  ; <ITERATION_>  ; <ITERATION_> ) <COMPOUND_STATEMENT>");
         this.tokens.shift();
         if(this.currentToken.class === tokensNames.OP){
             this.tokens.shift();
@@ -493,7 +493,7 @@ class Parser {
         if(id){
             let idTabela = this.tabelaSimbolos.pesquisar(id.token);
             if(idTabela && idTabela.declared){
-                this.addError(id, `Identificador ${id.token} já foi`)
+                this.addError(id, `Identificador "${id.token}" já foi declarado`)
             }
             else{
                 idTabela.declared = true;
